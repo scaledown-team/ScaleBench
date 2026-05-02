@@ -341,3 +341,19 @@ experiments:
       - rouge2
       - rougeL
 
+  # SQuAD v2 baseline experiment
+  - id: squad_v2_baseline_openai
+    model:
+      name: openai:gpt-4o
+      mode: baseline
+    dataset:
+      name: squad_v2
+      split: validation
+      num_examples: 10
+      seed: 42
+    task:
+      name: rag_qa
+    metrics:
+      - exact_match
+      - f1
+
