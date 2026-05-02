@@ -16,6 +16,7 @@ from dataset.ethic import ETHICDataset
 from dataset.msmarco import MSMARCODataset
 from dataset.financebench import FinanceBenchDataset
 from dataset.qmsum import QMSumDataset
+from dataset.squad_v2 import SQuADv2Dataset
 from dataset.base import Dataset
 
 # Import tasks
@@ -61,6 +62,7 @@ DATASET_REGISTRY: Dict[str, type] = {
     "msmarco": MSMARCODataset,
     "financebench": FinanceBenchDataset,
     "qmsum": QMSumDataset,
+    "squad_v2": SQuADv2Dataset,
 }
 
 TASK_REGISTRY: Dict[str, type] = {
