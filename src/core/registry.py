@@ -5,6 +5,7 @@ from core.config import ModelConfig, DatasetConfig, TaskConfig
 # Import model clients
 from models.openai_client import OpenAIClient
 from models.gemini_client import GeminiClient
+from models.deepseek_client import DeepSeekClient
 from models.scaledown_client import ScaleDownClient
 from models.scaledown_summarize_client import ScaleDownSummarizeClient
 from models.base import ModelClient, PricingInfo, DEFAULT_MODEL_PRICING
@@ -16,12 +17,14 @@ from dataset.ethic import ETHICDataset
 from dataset.msmarco import MSMARCODataset
 from dataset.financebench import FinanceBenchDataset
 from dataset.qmsum import QMSumDataset
+from dataset.clinc_oos import ClincOosDataset
 from dataset.base import Dataset
 
 # Import tasks
 from tasks.rag_task import RAGTask
 from tasks.retrieval_task import RetrievalTask
 from tasks.summarization_task import SummarizationTask
+from tasks.classification_task import ClassificationTask
 from tasks.base import Task
 
 # Import metrics
@@ -52,6 +55,7 @@ from metrics.retrieval import (
 MODEL_REGISTRY: Dict[str, type] = {
     "openai": OpenAIClient,
     "gemini": GeminiClient,
+    "deepseek": DeepSeekClient,
 }
 
 DATASET_REGISTRY: Dict[str, type] = {
@@ -61,12 +65,14 @@ DATASET_REGISTRY: Dict[str, type] = {
     "msmarco": MSMARCODataset,
     "financebench": FinanceBenchDataset,
     "qmsum": QMSumDataset,
+    "clinc_oos": ClincOosDataset,
 }
 
 TASK_REGISTRY: Dict[str, type] = {
     "rag_qa": RAGTask,
     "retrieval_task": RetrievalTask,
     "summarization": SummarizationTask,
+    "classification": ClassificationTask,
 }
 
 METRIC_REGISTRY: Dict[str, Callable] = {

@@ -341,3 +341,88 @@ experiments:
       - rouge2
       - rougeL
 
+
+  # QMSum - DeepSeek V4 Flash baseline
+  - id: qmsum_baseline_deepseekv4flash
+    tags: [qmsum]
+    model:
+      name: deepseek:deepseek-v4-flash
+      mode: baseline
+      generation:
+        max_tokens: 256
+        temperature: 1.2
+        top_p: 1.0
+    dataset:
+      name: qmsum
+      split: test
+      num_examples: 281
+      seed: 40
+    task:
+      name: summarization
+    metrics:
+      - rouge1
+      - rouge2
+      - rougeL
+
+  # QMSum - DeepSeek V4 Pro baseline
+  - id: qmsum_baseline_deepseekv4pro
+    tags: [qmsum]
+    model:
+      name: deepseek:deepseek-v4-pro
+      mode: baseline
+      generation:
+        max_tokens: 256
+        temperature: 1.2
+        top_p: 1.0
+    dataset:
+      name: qmsum
+      split: test
+      num_examples: 281
+      seed: 40
+    task:
+      name: summarization
+    metrics:
+      - rouge1
+      - rouge2
+      - rougeL
+
+  # CLINC OOS - DeepSeek V4 Flash baseline (Classify task)
+  # NOTE: num_examples/seed here are placeholders — confirm the sample size
+  # and seed used to produce the other models' Classify numbers (not found
+  # anywhere in this repo) before treating this as comparable.
+  - id: classify_clinc_baseline_deepseekv4flash
+    tags: [clinc_oos]
+    model:
+      name: deepseek:deepseek-v4-flash
+      mode: baseline
+      generation:
+        max_tokens: 16
+        temperature: 0.0
+    dataset:
+      name: clinc_oos
+      split: test
+      num_examples: 400
+      seed: 42
+    task:
+      name: classification
+    metrics:
+      - exact_match
+
+  # CLINC OOS - DeepSeek V4 Pro baseline (Classify task)
+  - id: classify_clinc_baseline_deepseekv4pro
+    tags: [clinc_oos]
+    model:
+      name: deepseek:deepseek-v4-pro
+      mode: baseline
+      generation:
+        max_tokens: 16
+        temperature: 0.0
+    dataset:
+      name: clinc_oos
+      split: test
+      num_examples: 400
+      seed: 42
+    task:
+      name: classification
+    metrics:
+      - exact_match

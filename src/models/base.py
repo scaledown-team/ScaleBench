@@ -45,6 +45,10 @@ DEFAULT_MODEL_PRICING: Dict[str, PricingInfo] = {
     "gemini-2.5-flash": PricingInfo(input_per_1m_tokens=0.30, output_per_1m_tokens=2.50),
     "gemini-2.5-flash-lite": PricingInfo(input_per_1m_tokens=0.10, output_per_1m_tokens=0.40),
     "gemini-2.5-pro": PricingInfo(input_per_1m_tokens=1.25, output_per_1m_tokens=10.00),
+
+    # DeepSeek models (cache-miss input rate; see deepseek.ai/pricing, Aug 2026)
+    "deepseek-v4-flash": PricingInfo(input_per_1m_tokens=0.14, output_per_1m_tokens=0.28),
+    "deepseek-v4-pro": PricingInfo(input_per_1m_tokens=0.435, output_per_1m_tokens=0.87),
 }
 
 
