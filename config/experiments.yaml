@@ -426,3 +426,83 @@ experiments:
       name: classification
     metrics:
       - exact_match
+
+  # FinanceBench - DeepSeek V4 Flash baseline (Compress task)
+  # NOTE: uses evidence_text_full_page fallback unless FINANCEBENCH_PDF_DIR is
+  # set to a local clone of patronus-ai/financebench PDFs. Confirm this matches
+  # the context source used for the other models' Compress numbers.
+  - id: financebench_baseline_deepseekv4flash
+    model:
+      name: deepseek:deepseek-v4-flash
+      mode: baseline
+    dataset:
+      name: financebench
+      split: train
+      num_examples: 150
+      seed: 42
+    task:
+      name: rag_qa
+    metrics:
+      - exact_match
+      - f1
+
+  # FinanceBench - DeepSeek V4 Pro baseline (Compress task)
+  - id: financebench_baseline_deepseekv4pro
+    model:
+      name: deepseek:deepseek-v4-pro
+      mode: baseline
+    dataset:
+      name: financebench
+      split: train
+      num_examples: 150
+      seed: 42
+    task:
+      name: rag_qa
+    metrics:
+      - exact_match
+      - f1
+
+  # LongExtractBench - DeepSeek V4 Flash baseline (Extract task)
+  # num_examples: 50 = the full LongExtractBench-50 set (no sampling needed).
+  - id: extract_longextractbench_deepseekv4flash
+    tags: [longextractbench]
+    model:
+      name: deepseek:deepseek-v4-flash
+      mode: baseline
+      generation:
+        max_tokens: 2048
+        temperature: 0.0
+    dataset:
+      name: longextractbench
+      split: test
+      num_examples: 50
+      seed: 42
+    task:
+      name: extraction
+    metrics:
+      - field_precision
+      - field_recall
+      - field_f1
+      - parse_rate
+
+  # LongExtractBench - DeepSeek V4 Pro baseline (Extract task)
+  - id: extract_longextractbench_deepseekv4pro
+    tags: [longextractbench]
+    model:
+      name: deepseek:deepseek-v4-pro
+      mode: baseline
+      generation:
+        max_tokens: 2048
+        temperature: 0.0
+    dataset:
+      name: longextractbench
+      split: test
+      num_examples: 50
+      seed: 42
+    task:
+      name: extraction
+    metrics:
+      - field_precision
+      - field_recall
+      - field_f1
+      - parse_rate
