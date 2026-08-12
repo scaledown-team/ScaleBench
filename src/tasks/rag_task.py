@@ -94,7 +94,13 @@ class RAGTask(Task):
             GenerationInput object.
         """
         from models.base import GenerationInput
-        
+
+        # model_mode is passed by evaluation/runner.py for every task (only
+        # SummarizationTask's ScaleDown-endpoint branch actually needs it);
+        # pop it here so it doesn't reach GenerationInput(), which has no
+        # such field and raises a TypeError on an unexpected kwarg.
+        kwargs.pop("model_mode", None)
+
         question = example.get("question", "")
         context = example.get("context", "")
         

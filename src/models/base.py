@@ -49,6 +49,12 @@ DEFAULT_MODEL_PRICING: Dict[str, PricingInfo] = {
     # DeepSeek models (cache-miss input rate; see deepseek.ai/pricing, Aug 2026)
     "deepseek-v4-flash": PricingInfo(input_per_1m_tokens=0.14, output_per_1m_tokens=0.28),
     "deepseek-v4-pro": PricingInfo(input_per_1m_tokens=0.435, output_per_1m_tokens=0.87),
+
+    # DeepSeek via OpenRouter (live from openrouter.ai/api/v1/models, Aug 2026).
+    # OpenRouterClient reports actual per-call cost from the API response when
+    # available, so these are a fallback only.
+    "deepseek/deepseek-v4-flash": PricingInfo(input_per_1m_tokens=0.14, output_per_1m_tokens=0.28),
+    "deepseek/deepseek-v4-pro": PricingInfo(input_per_1m_tokens=0.63168, output_per_1m_tokens=1.26336),
 }
 
 

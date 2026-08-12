@@ -346,7 +346,7 @@ experiments:
   - id: qmsum_baseline_deepseekv4flash
     tags: [qmsum]
     model:
-      name: deepseek:deepseek-v4-flash
+      name: openrouter:deepseek/deepseek-v4-flash
       mode: baseline
       generation:
         max_tokens: 256
@@ -368,7 +368,7 @@ experiments:
   - id: qmsum_baseline_deepseekv4pro
     tags: [qmsum]
     model:
-      name: deepseek:deepseek-v4-pro
+      name: openrouter:deepseek/deepseek-v4-pro
       mode: baseline
       generation:
         max_tokens: 256
@@ -393,7 +393,7 @@ experiments:
   - id: classify_clinc_baseline_deepseekv4flash
     tags: [clinc_oos]
     model:
-      name: deepseek:deepseek-v4-flash
+      name: openrouter:deepseek/deepseek-v4-flash
       mode: baseline
       generation:
         max_tokens: 16
@@ -412,7 +412,7 @@ experiments:
   - id: classify_clinc_baseline_deepseekv4pro
     tags: [clinc_oos]
     model:
-      name: deepseek:deepseek-v4-pro
+      name: openrouter:deepseek/deepseek-v4-pro
       mode: baseline
       generation:
         max_tokens: 16
@@ -433,7 +433,7 @@ experiments:
   # the context source used for the other models' Compress numbers.
   - id: financebench_baseline_deepseekv4flash
     model:
-      name: deepseek:deepseek-v4-flash
+      name: openrouter:deepseek/deepseek-v4-flash
       mode: baseline
     dataset:
       name: financebench
@@ -449,7 +449,7 @@ experiments:
   # FinanceBench - DeepSeek V4 Pro baseline (Compress task)
   - id: financebench_baseline_deepseekv4pro
     model:
-      name: deepseek:deepseek-v4-pro
+      name: openrouter:deepseek/deepseek-v4-pro
       mode: baseline
     dataset:
       name: financebench
@@ -467,10 +467,10 @@ experiments:
   - id: extract_longextractbench_deepseekv4flash
     tags: [longextractbench]
     model:
-      name: deepseek:deepseek-v4-flash
+      name: openrouter:deepseek/deepseek-v4-flash
       mode: baseline
       generation:
-        max_tokens: 2048
+        max_tokens: 12000
         temperature: 0.0
     dataset:
       name: longextractbench
@@ -489,10 +489,10 @@ experiments:
   - id: extract_longextractbench_deepseekv4pro
     tags: [longextractbench]
     model:
-      name: deepseek:deepseek-v4-pro
+      name: openrouter:deepseek/deepseek-v4-pro
       mode: baseline
       generation:
-        max_tokens: 2048
+        max_tokens: 12000
         temperature: 0.0
     dataset:
       name: longextractbench
@@ -506,3 +506,39 @@ experiments:
       - field_recall
       - field_f1
       - parse_rate
+
+  # CUAD - DeepSeek V4 Flash baseline (Extract task, matches methodology used
+  # for the other benchmark pages' Extract number, instead of LongExtractBench
+  # — CUAD contexts are ~11K chars vs LongExtractBench's ~250K-token documents,
+  # so this is far cheaper/faster and avoids the output-truncation problem
+  # LongExtractBench hit at 12K max_tokens).
+  - id: extract_cuad_baseline_deepseekv4flash
+    model:
+      name: openrouter:deepseek/deepseek-v4-flash
+      mode: baseline
+    dataset:
+      name: cuad
+      split: test
+      num_examples: 150
+      seed: 42
+    task:
+      name: rag_qa
+    metrics:
+      - exact_match
+      - f1
+
+  # CUAD - DeepSeek V4 Pro baseline (Extract task)
+  - id: extract_cuad_baseline_deepseekv4pro
+    model:
+      name: openrouter:deepseek/deepseek-v4-pro
+      mode: baseline
+    dataset:
+      name: cuad
+      split: test
+      num_examples: 150
+      seed: 42
+    task:
+      name: rag_qa
+    metrics:
+      - exact_match
+      - f1

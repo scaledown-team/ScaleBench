@@ -6,6 +6,7 @@ from core.config import ModelConfig, DatasetConfig, TaskConfig
 from models.openai_client import OpenAIClient
 from models.gemini_client import GeminiClient
 from models.deepseek_client import DeepSeekClient
+from models.openrouter_client import OpenRouterClient
 from models.scaledown_client import ScaleDownClient
 from models.scaledown_summarize_client import ScaleDownSummarizeClient
 from models.base import ModelClient, PricingInfo, DEFAULT_MODEL_PRICING
@@ -19,6 +20,7 @@ from dataset.financebench import FinanceBenchDataset
 from dataset.qmsum import QMSumDataset
 from dataset.clinc_oos import ClincOosDataset
 from dataset.longextractbench import LongExtractBenchDataset
+from dataset.cuad import CuadDataset
 from dataset.base import Dataset
 
 # Import tasks
@@ -64,6 +66,7 @@ MODEL_REGISTRY: Dict[str, type] = {
     "openai": OpenAIClient,
     "gemini": GeminiClient,
     "deepseek": DeepSeekClient,
+    "openrouter": OpenRouterClient,
 }
 
 DATASET_REGISTRY: Dict[str, type] = {
@@ -75,6 +78,7 @@ DATASET_REGISTRY: Dict[str, type] = {
     "qmsum": QMSumDataset,
     "clinc_oos": ClincOosDataset,
     "longextractbench": LongExtractBenchDataset,
+    "cuad": CuadDataset,
 }
 
 TASK_REGISTRY: Dict[str, type] = {

@@ -34,6 +34,9 @@ class ClassificationTask(Task):
         Returns:
             GenerationInput configured for the target client.
         """
+        # See tasks/rag_task.py for why this pop is needed.
+        kwargs.pop("model_mode", None)
+
         labels = example.get("labels", [])
         system_prompt = _SYSTEM_PROMPT_TEMPLATE.format(labels=", ".join(labels))
         return GenerationInput(
