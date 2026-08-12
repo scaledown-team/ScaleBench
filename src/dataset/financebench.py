@@ -1,4 +1,5 @@
 """FinanceBench dataset loader."""
+import os
 import random
 from pathlib import Path
 from typing import Iterator, Optional
@@ -7,9 +8,19 @@ from datasets import load_dataset as hf_load_dataset
 
 from dataset.base import Dataset, Example
 
-# Default path to cloned patronus-ai/financebench PDF directory
+# Default path to cloned patronus-ai/financebench PDF directory.
+# Override with the FINANCEBENCH_PDF_DIR env var, or pass pdf_dir=... to
+# FinanceBenchDataset(). If the directory doesn't exist, load_examples()
+# falls back to evidence_text_full_page (see below) rather than failing —
+# but that means a run without the PDFs is scoring different (shorter,
+# pre-extracted) context than a run with them. Confirm which one produced
+# any FinanceBench numbers you're comparing against before trusting a
+# cross-model comparison.
 DEFAULT_PDF_DIR = Path(
-    "/Users/soham/Desktop/scaledown-project/financebench-data/pdfs"
+    os.environ.get(
+        "FINANCEBENCH_PDF_DIR",
+        str(Path(__file__).resolve().parents[2] / "data" / "financebench-pdfs"),
+    )
 )
 
 

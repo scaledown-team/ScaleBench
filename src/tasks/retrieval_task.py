@@ -60,7 +60,10 @@ class RetrievalTask(Task):
             GenerationInput object with response_schema set.
         """
         from models.base import GenerationInput
-        
+
+        # See tasks/rag_task.py for why this pop is needed.
+        kwargs.pop("model_mode", None)
+
         question = example.get("question", "")
         context = example.get("context", "")
         

@@ -341,3 +341,204 @@ experiments:
       - rouge2
       - rougeL
 
+
+  # QMSum - DeepSeek V4 Flash baseline
+  - id: qmsum_baseline_deepseekv4flash
+    tags: [qmsum]
+    model:
+      name: openrouter:deepseek/deepseek-v4-flash
+      mode: baseline
+      generation:
+        max_tokens: 256
+        temperature: 1.2
+        top_p: 1.0
+    dataset:
+      name: qmsum
+      split: test
+      num_examples: 281
+      seed: 40
+    task:
+      name: summarization
+    metrics:
+      - rouge1
+      - rouge2
+      - rougeL
+
+  # QMSum - DeepSeek V4 Pro baseline
+  - id: qmsum_baseline_deepseekv4pro
+    tags: [qmsum]
+    model:
+      name: openrouter:deepseek/deepseek-v4-pro
+      mode: baseline
+      generation:
+        max_tokens: 256
+        temperature: 1.2
+        top_p: 1.0
+    dataset:
+      name: qmsum
+      split: test
+      num_examples: 281
+      seed: 40
+    task:
+      name: summarization
+    metrics:
+      - rouge1
+      - rouge2
+      - rougeL
+
+  # CLINC OOS - DeepSeek V4 Flash baseline (Classify task)
+  # NOTE: num_examples/seed here are placeholders — confirm the sample size
+  # and seed used to produce the other models' Classify numbers (not found
+  # anywhere in this repo) before treating this as comparable.
+  - id: classify_clinc_baseline_deepseekv4flash
+    tags: [clinc_oos]
+    model:
+      name: openrouter:deepseek/deepseek-v4-flash
+      mode: baseline
+      generation:
+        max_tokens: 16
+        temperature: 0.0
+    dataset:
+      name: clinc_oos
+      split: test
+      num_examples: 400
+      seed: 42
+    task:
+      name: classification
+    metrics:
+      - exact_match
+
+  # CLINC OOS - DeepSeek V4 Pro baseline (Classify task)
+  - id: classify_clinc_baseline_deepseekv4pro
+    tags: [clinc_oos]
+    model:
+      name: openrouter:deepseek/deepseek-v4-pro
+      mode: baseline
+      generation:
+        max_tokens: 16
+        temperature: 0.0
+    dataset:
+      name: clinc_oos
+      split: test
+      num_examples: 400
+      seed: 42
+    task:
+      name: classification
+    metrics:
+      - exact_match
+
+  # FinanceBench - DeepSeek V4 Flash baseline (Compress task)
+  # NOTE: uses evidence_text_full_page fallback unless FINANCEBENCH_PDF_DIR is
+  # set to a local clone of patronus-ai/financebench PDFs. Confirm this matches
+  # the context source used for the other models' Compress numbers.
+  - id: financebench_baseline_deepseekv4flash
+    model:
+      name: openrouter:deepseek/deepseek-v4-flash
+      mode: baseline
+    dataset:
+      name: financebench
+      split: train
+      num_examples: 150
+      seed: 42
+    task:
+      name: rag_qa
+    metrics:
+      - exact_match
+      - f1
+
+  # FinanceBench - DeepSeek V4 Pro baseline (Compress task)
+  - id: financebench_baseline_deepseekv4pro
+    model:
+      name: openrouter:deepseek/deepseek-v4-pro
+      mode: baseline
+    dataset:
+      name: financebench
+      split: train
+      num_examples: 150
+      seed: 42
+    task:
+      name: rag_qa
+    metrics:
+      - exact_match
+      - f1
+
+  # LongExtractBench - DeepSeek V4 Flash baseline (Extract task)
+  # num_examples: 50 = the full LongExtractBench-50 set (no sampling needed).
+  - id: extract_longextractbench_deepseekv4flash
+    tags: [longextractbench]
+    model:
+      name: openrouter:deepseek/deepseek-v4-flash
+      mode: baseline
+      generation:
+        max_tokens: 12000
+        temperature: 0.0
+    dataset:
+      name: longextractbench
+      split: test
+      num_examples: 50
+      seed: 42
+    task:
+      name: extraction
+    metrics:
+      - field_precision
+      - field_recall
+      - field_f1
+      - parse_rate
+
+  # LongExtractBench - DeepSeek V4 Pro baseline (Extract task)
+  - id: extract_longextractbench_deepseekv4pro
+    tags: [longextractbench]
+    model:
+      name: openrouter:deepseek/deepseek-v4-pro
+      mode: baseline
+      generation:
+        max_tokens: 12000
+        temperature: 0.0
+    dataset:
+      name: longextractbench
+      split: test
+      num_examples: 50
+      seed: 42
+    task:
+      name: extraction
+    metrics:
+      - field_precision
+      - field_recall
+      - field_f1
+      - parse_rate
+
+  # CUAD - DeepSeek V4 Flash baseline (Extract task, matches methodology used
+  # for the other benchmark pages' Extract number, instead of LongExtractBench
+  # — CUAD contexts are ~11K chars vs LongExtractBench's ~250K-token documents,
+  # so this is far cheaper/faster and avoids the output-truncation problem
+  # LongExtractBench hit at 12K max_tokens).
+  - id: extract_cuad_baseline_deepseekv4flash
+    model:
+      name: openrouter:deepseek/deepseek-v4-flash
+      mode: baseline
+    dataset:
+      name: cuad
+      split: test
+      num_examples: 150
+      seed: 42
+    task:
+      name: rag_qa
+    metrics:
+      - exact_match
+      - f1
+
+  # CUAD - DeepSeek V4 Pro baseline (Extract task)
+  - id: extract_cuad_baseline_deepseekv4pro
+    model:
+      name: openrouter:deepseek/deepseek-v4-pro
+      mode: baseline
+    dataset:
+      name: cuad
+      split: test
+      num_examples: 150
+      seed: 42
+    task:
+      name: rag_qa
+    metrics:
+      - exact_match
+      - f1

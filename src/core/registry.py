@@ -5,6 +5,8 @@ from core.config import ModelConfig, DatasetConfig, TaskConfig
 # Import model clients
 from models.openai_client import OpenAIClient
 from models.gemini_client import GeminiClient
+from models.deepseek_client import DeepSeekClient
+from models.openrouter_client import OpenRouterClient
 from models.scaledown_client import ScaleDownClient
 from models.scaledown_summarize_client import ScaleDownSummarizeClient
 from models.base import ModelClient, PricingInfo, DEFAULT_MODEL_PRICING
@@ -16,12 +18,17 @@ from dataset.ethic import ETHICDataset
 from dataset.msmarco import MSMARCODataset
 from dataset.financebench import FinanceBenchDataset
 from dataset.qmsum import QMSumDataset
+from dataset.clinc_oos import ClincOosDataset
+from dataset.longextractbench import LongExtractBenchDataset
+from dataset.cuad import CuadDataset
 from dataset.base import Dataset
 
 # Import tasks
 from tasks.rag_task import RAGTask
 from tasks.retrieval_task import RetrievalTask
 from tasks.summarization_task import SummarizationTask
+from tasks.classification_task import ClassificationTask
+from tasks.extraction_task import ExtractionTask
 from tasks.base import Task
 
 # Import metrics
@@ -38,6 +45,12 @@ from metrics.set_metrics import (
     compute_set_recall,
     compute_set_f1,
 )
+from metrics.field_extraction import (
+    compute_field_precision,
+    compute_field_recall,
+    compute_field_f1,
+    compute_parse_rate,
+)
 from metrics.retrieval import (
     compute_retrieval_precision,
     compute_retrieval_recall,
@@ -52,6 +65,8 @@ from metrics.retrieval import (
 MODEL_REGISTRY: Dict[str, type] = {
     "openai": OpenAIClient,
     "gemini": GeminiClient,
+    "deepseek": DeepSeekClient,
+    "openrouter": OpenRouterClient,
 }
 
 DATASET_REGISTRY: Dict[str, type] = {
@@ -61,12 +76,17 @@ DATASET_REGISTRY: Dict[str, type] = {
     "msmarco": MSMARCODataset,
     "financebench": FinanceBenchDataset,
     "qmsum": QMSumDataset,
+    "clinc_oos": ClincOosDataset,
+    "longextractbench": LongExtractBenchDataset,
+    "cuad": CuadDataset,
 }
 
 TASK_REGISTRY: Dict[str, type] = {
     "rag_qa": RAGTask,
     "retrieval_task": RetrievalTask,
     "summarization": SummarizationTask,
+    "classification": ClassificationTask,
+    "extraction": ExtractionTask,
 }
 
 METRIC_REGISTRY: Dict[str, Callable] = {
@@ -83,6 +103,10 @@ METRIC_REGISTRY: Dict[str, Callable] = {
     "retrieval_precision": compute_retrieval_precision,
     "retrieval_recall": compute_retrieval_recall,
     "retrieval_f1": compute_retrieval_f1,
+    "field_precision": compute_field_precision,
+    "field_recall": compute_field_recall,
+    "field_f1": compute_field_f1,
+    "parse_rate": compute_parse_rate,
 }
 
 
