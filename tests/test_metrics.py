@@ -79,5 +79,47 @@ def test_f1_with_normalization():
     assert result["f1"] == 1.0
 
 
+def test_exact_match_accepts_any_normalized_reference():
+    assert compute_exact_match(
+        ["PARIS"], [["London", "Paris"]], normalize_fn=str.lower
+    ) == {"exact_match": 1.0}
+
+
+def test_exact_match_reference_order_does_not_change_score():
+    predictions = ["Paris", "Berlin"]
+    references = [["London", "Paris"], ["Tokyo", "Rome"]]
+    reversed_references = [list(reversed(refs)) for refs in references]
+    assert compute_exact_match(predictions, references) == {"exact_match": 0.5}
+    assert compute_exact_match(predictions, reversed_references) == {"exact_match": 0.5}
+
+
+def test_exact_match_empty_batch():
+    assert compute_exact_match([], []) == {"exact_match": 0.0}
+
+
+def test_exact_match_empty_reference_list():
+    assert compute_exact_match(["", "answer"], [[], []]) == {"exact_match": 0.5}
+
+
+@pytest.mark.parametrize("metric", [compute_exact_match, compute_f1])
+@pytest.mark.parametrize("predictions,references", [(["a"], []), ([], [["a"]])])
+def test_qa_metrics_reject_mismatched_batch_lengths(metric, predictions, references):
+    with pytest.raises(ValueError, match="same length"):
+        metric(predictions, references)
+
+
+@pytest.mark.parametrize(
+    "prediction,reference,expected",
+    [
+        ("red red blue", "red red blue", 1.0),
+        ("red red", "red red blue", 0.8),
+        ("red red blue", "red red", 0.8),
+        ("red red red", "red", 0.5),
+    ],
+)
+def test_f1_counts_repeated_tokens(prediction, reference, expected):
+    assert compute_f1([prediction], [[reference]])["f1"] == pytest.approx(expected)
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

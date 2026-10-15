@@ -1,6 +1,6 @@
 """Classification metrics (F1, precision, recall, accuracy)."""
+from collections import Counter
 from typing import List, Dict, Callable, Optional
-import evaluate as hf_evaluate
 
 
 def compute_exact_match(
@@ -8,7 +8,7 @@ def compute_exact_match(
     references: List[List[str]],
     normalize_fn: Optional[Callable[[str], str]] = None,
 ) -> Dict[str, float]:
-    """Compute exact match score using HuggingFace evaluate.
+    """Compute exact match against any reference for each example.
     
     Args:
         predictions: List of predicted strings.
@@ -18,22 +18,15 @@ def compute_exact_match(
     Returns:
         Dictionary with 'exact_match' score.
     """
-    # Load metric lazily to avoid startup overhead
-    metric = hf_evaluate.load("exact_match")
-    
-    # Flatten references to single strings (take first reference)
-    # HF exact_match expects single strings, not lists
-    flat_refs = [refs[0] if refs else "" for refs in references]
-    
-    # Apply normalization if provided
+    if len(predictions) != len(references):
+        raise ValueError("Predictions and references must have the same length")
+
     if normalize_fn:
         predictions = [normalize_fn(pred) for pred in predictions]
-        flat_refs = [normalize_fn(ref) for ref in flat_refs]
-    
-    # Compute metric
-    result = metric.compute(predictions=predictions, references=flat_refs)
-    
-    return result
+        references = [[normalize_fn(ref) for ref in (refs or [""])] for refs in references]
+
+    matches = sum(pred in (refs or [""]) for pred, refs in zip(predictions, references))
+    return {"exact_match": matches / len(predictions) if predictions else 0.0}
 
 
 def compute_f1(
@@ -55,6 +48,9 @@ def compute_f1(
         Dictionary with 'f1' score.
     """
     
+    if len(predictions) != len(references):
+        raise ValueError("Predictions and references must have the same length")
+
     total_f1 = 0.0
     
     for pred, refs in zip(predictions, references):
@@ -72,8 +68,8 @@ def compute_f1(
                 f1 = 0.0
             else:
                 # Compute token overlap
-                common = set(pred_tokens) & set(ref_tokens)
-                num_common = len(common)
+                common = Counter(pred_tokens) & Counter(ref_tokens)
+                num_common = sum(common.values())
                 
                 if num_common == 0:
                     f1 = 0.0
