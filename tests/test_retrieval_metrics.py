@@ -150,6 +150,23 @@ class TestRetrievalF1:
         # With our implementation: precision=0, recall=1, so F1=0
         assert result["retrieval_f1"] == 0.0
 
+    def test_batch_f1_averages_per_example_scores(self):
+        predictions = [[0], [0, 1]]
+        references = [[0, 1], [0]]
+        # Each example has F1=2/3; combining mean precision/recall gives 0.75.
+        assert compute_retrieval_f1(predictions, references)["retrieval_f1"] == pytest.approx(2 / 3)
+
+    def test_empty_prediction_does_not_borrow_recall_from_another_example(self):
+        assert compute_retrieval_f1([[0], []], [[0], []]) == {"retrieval_f1": 0.5}
+
+    @pytest.mark.parametrize("predictions,references", [([], []), ([None], [[0]])])
+    def test_empty_batch_or_missing_prediction(self, predictions, references):
+        assert compute_retrieval_f1(predictions, references) == {"retrieval_f1": 0.0}
+
+    def test_mismatched_lengths_raise(self):
+        with pytest.raises(ValueError, match="same length"):
+            compute_retrieval_f1([[0]], [])
+
 
 class TestComputeAllRetrievalMetrics:
     """Tests for compute_all_retrieval_metrics."""
@@ -164,6 +181,12 @@ class TestComputeAllRetrievalMetrics:
         assert "retrieval_precision" in result
         assert "retrieval_recall" in result
         assert "retrieval_f1" in result
+
+    def test_batch_f1_matches_per_example_average(self):
+        result = compute_all_retrieval_metrics([[0], [0, 1]], [[0, 1], [0]])
+        assert result["retrieval_precision"] == 0.75
+        assert result["retrieval_recall"] == 0.75
+        assert result["retrieval_f1"] == pytest.approx(2 / 3)
 
 
 class TestCombinedScore:

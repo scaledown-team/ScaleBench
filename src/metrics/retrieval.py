@@ -116,10 +116,11 @@ def compute_retrieval_f1(
     references: List[Optional[List[int]]],
     normalize_fn: Optional[Callable] = None,
 ) -> dict:
-    """Compute set-based F1 for passage retrieval.
+    """Compute macro-averaged set-based F1 for passage retrieval.
     
     F1 = 2 * (precision * recall) / (precision + recall)
     
+    Compute F1 per example, then average over the batch.
     F1 is 0 if both precision and recall are 0.
     
     Args:
@@ -130,18 +131,20 @@ def compute_retrieval_f1(
     Returns:
         Dict with 'retrieval_f1' key and float value.
     """
-    precision_result = compute_retrieval_precision(predictions, references)
-    recall_result = compute_retrieval_recall(predictions, references)
-    
-    precision = precision_result["retrieval_precision"]
-    recall = recall_result["retrieval_recall"]
-    
-    if precision + recall == 0:
-        f1 = 0.0
-    else:
-        f1 = 2 * (precision * recall) / (precision + recall)
-    
-    return {"retrieval_f1": f1}
+    if len(predictions) != len(references):
+        raise ValueError(
+            f"Predictions ({len(predictions)}) and references ({len(references)}) "
+            "must have the same length"
+        )
+
+    scores = []
+    for pred, gold in zip(predictions, references):
+        pred_set = _to_set(pred)
+        gold_set = _to_set(gold)
+        total = len(pred_set) + len(gold_set)
+        scores.append(2 * len(pred_set & gold_set) / total if total else 0.0)
+
+    return {"retrieval_f1": sum(scores) / len(scores) if scores else 0.0}
 
 
 def compute_all_retrieval_metrics(
