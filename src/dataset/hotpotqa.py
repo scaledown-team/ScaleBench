@@ -44,8 +44,7 @@ class HotpotQADataset(Dataset):
         total_size = len(hf_dataset)
         if limit is not None and limit < total_size:
             # Deterministic random sampling
-            random.seed(seed)
-            indices = random.sample(range(total_size), limit)
+            indices = random.Random(seed).sample(range(total_size), limit)
             indices.sort()  # Keep order for consistency
         else:
             indices = range(total_size)

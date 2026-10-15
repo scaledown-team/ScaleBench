@@ -88,8 +88,7 @@ class QMSumDataset(Dataset):
                 ))
 
         if limit is not None and limit < len(all_examples):
-            random.seed(seed)
-            all_examples = random.sample(all_examples, limit)
+            all_examples = random.Random(seed).sample(all_examples, limit)
             all_examples.sort(key=lambda e: e["id"])
 
         yield from all_examples

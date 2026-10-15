@@ -106,8 +106,7 @@ class MSMARCODataset(Dataset):
         
         # Apply limit with deterministic sampling
         if limit is not None and limit < len(valid_indices):
-            random.seed(seed)
-            valid_indices = random.sample(valid_indices, limit)
+            valid_indices = random.Random(seed).sample(valid_indices, limit)
             valid_indices.sort()
         
         # Yield examples

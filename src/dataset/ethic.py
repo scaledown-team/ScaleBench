@@ -56,8 +56,7 @@ class ETHICDataset(Dataset):
         # Get indices for sampling
         total_size = len(hf_dataset)
         if limit is not None and limit < total_size:
-            random.seed(seed)
-            indices = random.sample(range(total_size), limit)
+            indices = random.Random(seed).sample(range(total_size), limit)
             indices.sort()
         else:
             indices = range(total_size)

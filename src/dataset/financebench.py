@@ -92,8 +92,7 @@ class FinanceBenchDataset(Dataset):
         # Deterministic sampling
         total_size = len(all_examples)
         if limit is not None and limit < total_size:
-            random.seed(seed)
-            indices = random.sample(range(total_size), limit)
+            indices = random.Random(seed).sample(range(total_size), limit)
             indices.sort()
         else:
             indices = range(total_size)
